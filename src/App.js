@@ -1,26 +1,42 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+import { getCardsList, getOrdersList } from "./axios";
+import CardForm from "./Components/CardSection/CardForm";
+import { useGlobalState } from "./GlobalContext";
+import CardList from "./Components/CardSection/CardList";
+import OrderForm from "./Components/OrdersSection/OrderForm";
+import OrderList from "./Components/OrdersSection/OrderList";
+import OrderInfo from "./Components/OrderInfo";
+import Actions from "./Components/Actions";
+
+window.cards = [];
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const { setCards, setOrders } = useGlobalState();
+
+    useEffect(() => {
+        getCardsList().then((res) => {
+            setCards(res);
+        });
+        getOrdersList().then((res) => {
+            setOrders(res);
+        });
+    }, [setCards, setOrders]);
+    return (
+        <div style={{ display: "flex" }}>
+            <div>
+                <CardForm />
+                <CardList />
+            </div>
+            <div>
+                <OrderForm />
+                <OrderList />
+            </div>
+            <div>
+                <OrderInfo />
+                <Actions />
+            </div>
+        </div>
+    );
 }
 
 export default App;
